@@ -2,6 +2,7 @@
 Design a tiny compiler with `Lex` and `Yacc`.
 
 ## About
+The project is supposed to read a calculation expression and produce a three-address code in C Language.
 The project has been divided into three phases.
 ```mermaid
 flowchart TD;
