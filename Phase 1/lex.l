@@ -1,7 +1,8 @@
 %{
 	
 #include <stdio.h>
-int ch= 0, wd= 0, nl= 0, nDigit = 0, nNumber = 0, nOp = 0;
+int ch = 0, nl = 0, nLetter = 0, nDigit = 0, 
+	nId = 0, nNumber = 0, nOp = 0;
 
 %}
 
@@ -12,8 +13,14 @@ delim		[ \t\n]+
 /* White Spaces */
 ws 			{delim}+
 
+/* Letters */
+letter 		[A-Za-z]
+
 /* Digits */
 digit		[0-9]
+
+/* Id or Variables */
+id 			{letter}({letter}|{digit})*
 
 /* Number */
 number		[+\-]?{digit}+(\.{digit}+)?
@@ -27,18 +34,22 @@ div			":D:"
 /* ========== Translation Rules ========== */
 %%
 
-\n 			{ch++; wd++; nl++;}
+\n 			{ch++; nl++;}
 ^{delim} 	{ch += yyleng;}
-{delim} 	{ch += yyleng; wd++;}
+{delim} 	{ch += yyleng;}
 
-{digit}		{ch += yyleng; nDigit++;}
+{letter}	{ch++; nLetter++; nId++;}
 
-{number}	{ch += yyleng; nDigit += yyleng; wd++; nNumber++;}
+{digit}		{ch += yyleng; nDigit++; nNumber++;}
 
-{add}		{ch += yyleng; wd++; nOp++;}
-{sub}		{ch += yyleng; wd++; nOp++;}
-{mul}		{ch += yyleng; wd++; nOp++;}
-{div}		{ch += yyleng; wd++; nOp++;}
+{id}		{ch += yyleng; nId++;}
+
+{number}	{ch += yyleng; nDigit += yyleng; nNumber++;}
+
+{add}		{ch += yyleng; nOp++;}
+{sub}		{ch += yyleng; nOp++;}
+{mul}		{ch += yyleng; nOp++;}
+{div}		{ch += yyleng; nOp++;}
 
 . 			{ch++;}
 
@@ -47,11 +58,10 @@ div			":D:"
 int yywrap(){}
 int main() {
 	yylex();
-	printf("\tNumber Of Characters:%8d \
-			\n\tNumber Of Words:%8d \
+	printf("\n\tNumber Of Characters:%8d \
 			\n\tNumber Of Newlines:%8d \
-			\n\tNumber Of Digits:%8d \
+			\n\tNumber Of Ids:%8d \
 			\n\tNumber Of Numbers:%8d \
 			\n\tNumber Of Operations:%8d\n"
-				, ch, wd, nl, nDigit, nNumber, nOp);
+				, ch, nl, nId, nNumber, nOp);
 }
