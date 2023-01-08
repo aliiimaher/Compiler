@@ -14,8 +14,22 @@ flowchart TD;
 ```
 
 ## Running
+### Phase 1
 ```
   flex  lex.l
   gcc   lex.yy.c
         a.exe
 ```        
+### Phase 2
+```
+  bison -d -y   yacc.y
+  gcc           y.tab.c
+                a.exe
+``` 
+### Phase 3 (Project)
+```
+  bison -d -y       yacc.y
+  flex              lex.l
+  gcc   lex.yy.c    y.tab.c
+                    a.exe
+``` 
